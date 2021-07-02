@@ -1,5 +1,6 @@
 package com.example.bluetooth_test;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -36,6 +37,7 @@ public class Connection {
     private UUID deviceUUID;
     static ProgressDialog mProgressDialog;
     private ConnectedThread mConnectedThread;
+    public String incomingMessage;
 
 
     public Connection(Context context) {
@@ -198,9 +200,10 @@ public class Connection {
                     System.out.println("Hallelujah");
                     bytes = mmInStream.read(buffer);
                     System.out.println("Hallelujah");
-                    String incomingMessage = new String(buffer,0,bytes);
+                    incomingMessage = new String(buffer,0,bytes);
                     System.out.println("Hallelujah");
                     Log.d(TAG, "Input Stream: " + incomingMessage);
+
 
                     Intent incomingMessageIntent = new Intent(incomingMessage);
                     incomingMessageIntent.putExtra("theMessage",incomingMessage);
@@ -237,4 +240,5 @@ public class Connection {
         Log.d(TAG,"Write: write called");
         mConnectedThread.write(out);
     }
+
 }

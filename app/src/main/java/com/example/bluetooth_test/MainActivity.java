@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     Button connect;
     Switch led1,led2,led3,led4;
     StringBuilder messages;
+    public TextView tv;
+
 
     //Button btnSend;
 
@@ -56,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
     public DeviceListAdapter mDeviceListAdapter;
 
     ListView lvNewDevices;
-    TextView tv;
 
 
     // Create a BroadcastReceiver for ACTION_FOUND
@@ -193,18 +194,20 @@ public class MainActivity extends AppCompatActivity {
         Button btnOnOff = (Button) findViewById(R.id.btnOnOff);
         btnEnableDisable_Discoverable = (Button) findViewById(R.id.btnDiscoverable_on_off);
         lvNewDevices = (ListView) findViewById(R.id.lvNewDevices);
-        tv = findViewById(R.id.displaylog);
         connect = findViewById(R.id.act_conn);
         led1 = findViewById(R.id.led1);
         led2 = findViewById(R.id.led2);
         led3 = findViewById(R.id.led3);
         led4 = findViewById(R.id.led4);
+        tv = findViewById(R.id.displaylog);
+
+
 
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mReciever,new IntentFilter("incomingMessage"));
 
 
-
+        messages = new StringBuilder();
         mBTDevices = new ArrayList<>();
         mBluetoothConnection = new Connection(getBaseContext());
 
@@ -244,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
 
                     mBTDevice = mBTDevices.get(i);
                     System.out.println(mBTDevice.getName());
-                    mBluetoothConnection = new Connection(MainActivity.this);
+                    mBluetoothConnection = new Connection(getBaseContext());
                 }
             }
 
@@ -376,9 +379,10 @@ public class MainActivity extends AppCompatActivity {
     BroadcastReceiver mReciever = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
             String text = intent.getStringExtra("theMessage");
             messages.append(text + "\n");
-            tv.setText(messages);
+           // tv.setText(messages);
         }
     };
 
