@@ -10,6 +10,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,10 +37,12 @@ public class Connection {
     private AcceptThread mInSecureAcceptThread;
     private ConnectThread mConnectThread;
     private BluetoothDevice mmDevice;
+    //private final Handler mHandler;
     private UUID deviceUUID;
     static ProgressDialog mProgressDialog;
     private ConnectedThread mConnectedThread;
     public String incomingMessage;
+    public Handler cnHandler;
 
 
     public Connection(Context context) {
@@ -45,6 +50,14 @@ public class Connection {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         start();
     }
+
+    public void setuphandler(Handler h){
+        cnHandler=h;
+    }
+
+
+
+
     public class AcceptThread extends Thread{
         //local server socket
         private final BluetoothServerSocket mmServerSocket;
@@ -146,7 +159,7 @@ public class Connection {
     }
     public void startClient(BluetoothDevice device,UUID uuid){
         Log.d(TAG,"startClient:Started");
-        mProgressDialog = ProgressDialog.show(mContext,"Progress","Connecting Bluetooth,Please wait...",true);
+       // mProgressDialog = ProgressDialog.show(mContext,"Progress","Connecting Bluetooth,Please wait...",true);
 
         mConnectThread = new ConnectThread(device, uuid);
         mConnectThread.start();
@@ -204,6 +217,13 @@ public class Connection {
                     System.out.println("Hallelujah");
                     Log.d(TAG, "Input Stream: " + incomingMessage);
 
+                    Bundle bundle = new Bundle();
+                    bundle.putString("receivedata", incomingMessage);
+                    Message msg = Message.obtain();
+                    msg.what = 2;
+                    msg.setData(bundle);
+
+                    cnHandler.sendMessage(msg);
 
                     Intent incomingMessageIntent = new Intent(incomingMessage);
                     incomingMessageIntent.putExtra("theMessage",incomingMessage);
@@ -240,5 +260,7 @@ public class Connection {
         Log.d(TAG,"Write: write called");
         mConnectedThread.write(out);
     }
+
+
 
 }

@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,8 +29,9 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.LogRecord;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity<Hander> extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     Connection mBluetoothConnection;
 
     Button btnStartConnection;
+    public String ms="";
     Button connect;
     Switch led1,led2,led3,led4;
     StringBuilder messages;
@@ -173,6 +177,53 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private final android.os.Handler mHandler = new Handler(){
+        public void handleMessage(Message msg) {
+            if (msg.what == 2) {
+                //I thought the sendMessage invoked inside the Thread
+                //would go here, where I can process the bundle and
+                //set some data to a View element and not only Thread change
+                Bundle d = msg.getData();
+                String tempms = d.getString("receivedata");
+                switch (tempms){
+                    case "10":
+                        tempms = "\nLED 1 is OFF";
+                        break;
+                    case "11":
+                        tempms = "\nLED 1 is ON";
+                        break;
+
+                    case "20":
+                        tempms = "\nLED 2 is OFF";
+                        break;
+                    case "21":
+                        tempms = "\nLED 2 is ON";
+                        break;
+
+                    case "30":
+                        tempms = "\nLED 3 is OFF";
+                        break;
+                    case "31":
+                        tempms = "\nLED 3 is ON";
+                        break;
+
+                    case "40":
+                        tempms = "\nLED 4 is OFF";
+                        break;
+                    case "41":
+                        tempms = "\nLED 4 is ON";
+                        break;
+
+//                    default: tempms = new String(buffer,0,bytes);
+//                        break;
+
+                }
+                ms=ms+tempms;
+                tv.setText(ms);
+            }
+        }
+    };
+
 
 
     @Override
@@ -210,6 +261,7 @@ public class MainActivity extends AppCompatActivity {
         messages = new StringBuilder();
         mBTDevices = new ArrayList<>();
         mBluetoothConnection = new Connection(getBaseContext());
+        mBluetoothConnection.setuphandler(mHandler);
 
         btnStartConnection = (Button) findViewById(R.id.act_conn);
         //btnSend = (Button) findViewById(R.id.btnSend);
@@ -375,6 +427,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
 
     BroadcastReceiver mReciever = new BroadcastReceiver() {
         @Override

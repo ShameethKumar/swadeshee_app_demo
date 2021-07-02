@@ -26,7 +26,7 @@
             android:text="Connect"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.911"
+            app:layout_constraintHorizontal_bias="0.964"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.301" />
@@ -38,7 +38,6 @@
             android:text="Discover"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.47"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.301" />
@@ -104,12 +103,15 @@
 
         <TextView
             android:id="@+id/displaylog"
-            android:layout_width="343dp"
-            android:layout_height="163dp"
+            android:layout_width="208dp"
+            android:layout_height="178dp"
+            android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.758"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.625" />
+            app:layout_constraintVertical_bias="0.654" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
