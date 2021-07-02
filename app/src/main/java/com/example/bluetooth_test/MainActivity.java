@@ -2,6 +2,7 @@ package com.example.bluetooth_test;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
@@ -15,13 +16,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     Button btnStartConnection;
     Button connect;
-    Switch led;
+    Switch led1,led2,led3,led4;
+    StringBuilder messages;
 
     //Button btnSend;
 
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     public DeviceListAdapter mDeviceListAdapter;
 
     ListView lvNewDevices;
+    TextView tv;
 
 
     // Create a BroadcastReceiver for ACTION_FOUND
@@ -187,8 +193,18 @@ public class MainActivity extends AppCompatActivity {
         Button btnOnOff = (Button) findViewById(R.id.btnOnOff);
         btnEnableDisable_Discoverable = (Button) findViewById(R.id.btnDiscoverable_on_off);
         lvNewDevices = (ListView) findViewById(R.id.lvNewDevices);
+        tv = findViewById(R.id.displaylog);
         connect = findViewById(R.id.act_conn);
-        led = findViewById(R.id.led1);
+        led1 = findViewById(R.id.led1);
+        led2 = findViewById(R.id.led2);
+        led3 = findViewById(R.id.led3);
+        led4 = findViewById(R.id.led4);
+
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReciever,new IntentFilter("incomingMessage"));
+
+
+
         mBTDevices = new ArrayList<>();
         mBluetoothConnection = new Connection(getBaseContext());
 
@@ -273,23 +289,78 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        led.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        led1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
 
-                    byte[] bytes = "0001".getBytes(Charset.defaultCharset());
+                    byte[] bytes = "11".getBytes(Charset.defaultCharset());
                     mBluetoothConnection.write(bytes);
 
                 }
                 if(!isChecked){
 
-                    byte[] bytes = "0000".getBytes(Charset.defaultCharset());
+                    byte[] bytes = "10".getBytes(Charset.defaultCharset());
                     mBluetoothConnection.write(bytes);
 
                 }
             }
         });
+
+        led2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+
+                    byte[] bytes = "21".getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(bytes);
+
+                }
+                if(!isChecked){
+
+                    byte[] bytes = "20".getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(bytes);
+
+                }
+            }
+        });
+
+        led3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+
+                    byte[] bytes = "31".getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(bytes);
+
+                }
+                if(!isChecked){
+
+                    byte[] bytes = "30".getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(bytes);
+
+                }
+            }
+        });
+
+        led4.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+
+                    byte[] bytes = "41".getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(bytes);
+
+                }
+                if(!isChecked){
+
+                    byte[] bytes = "40".getBytes(Charset.defaultCharset());
+                    mBluetoothConnection.write(bytes);
+
+                }
+            }
+        });
+
 
 //        btnSend.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -301,6 +372,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    BroadcastReceiver mReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String text = intent.getStringExtra("theMessage");
+            messages.append(text + "\n");
+            tv.setText(messages);
+        }
+    };
 
     //create method for starting connection
 //***remember the connection will fail and app will crash if you haven't paired first
